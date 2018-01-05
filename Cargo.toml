@@ -1,0 +1,9 @@
+[package]
+name = "laptop-stats"
+version = "0.1.0"
+authors = ["Benjamin Herr <ben@0x539.de>"]
+
+[dependencies]
+prometheus = "0.3"
+hyper = "0.11"
+failure = "0.1"
