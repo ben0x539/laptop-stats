@@ -1,10 +1,4 @@
-#![feature(
-    conservative_impl_trait,
-    copy_closures,
-    clone_closures,
-    catch_expr,
-    use_nested_groups,
-)]
+#![feature(catch_expr)]
 
 use std::{
     path, fs, time,
@@ -310,7 +304,7 @@ fn main_() -> Result<(), Error> {
         let registry = registry.clone();
         let metrics = metrics.clone();
         let f = move |_req| -> Result<hyper::server::Response, hyper::Error> {
-            let res = do catch {
+            let res: Result<_, _> = do catch {
                 metrics.lock().unwrap() // XXX
                     .maybe_update(time::Duration::from_secs(5))?;
 
@@ -322,15 +316,16 @@ fn main_() -> Result<(), Error> {
                 let content_type =
                     encoder.format_type().parse::<hyper::mime::Mime>()?;
 
-                Ok(hyper::server::Response::new()
+                hyper::server::Response::new()
                     .with_header(hyper::header::ContentType(content_type))
-                    .with_body(buffer))
-            }.unwrap_or_else(|e: Error| hyper::server::Response::new()
-                .with_status(hyper::StatusCode::InternalServerError)
-                .with_body(e.to_string())
-            );
+                    .with_body(buffer)
+            };
+            let resp = res.unwrap_or_else(|e: Error|
+                hyper::server::Response::new()
+                    .with_status(hyper::StatusCode::InternalServerError)
+                    .with_body(e.to_string()));
 
-            return Ok(res);
+            return Ok(resp);
         };
 
         Ok(hyper::server::service_fn(f))
