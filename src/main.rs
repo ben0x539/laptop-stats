@@ -167,41 +167,38 @@ fn from_file<P: Into<path::PathBuf>>(gauge: Gauge, p: P)
     }
 }
 
+fn add_backlight<P: AsRef<path::Path>>(updates: &mut Vec<Box<Update>>, path: P)
+        -> Result<(), Error> {
+    let path = path.as_ref();
+    if !fs::metadata(path)?.file_type().is_dir() {
+        return Ok(());
+    }
+
+    // TODO: this is gonna break if a laptop has multiple backlights
+    //       but clearly that can never happen
+    updates.push(Box::new(from_file(
+        Gauge::new(
+            "laptop_backlight_brightness",
+            "current backlight brightness")?,
+        path.join("brightness"))));
+    updates.push(Box::new(from_file(
+        Gauge::new(
+            "laptop_backlight_brightness_max",
+            "maximum backlight brightness")?,
+        path.join("max_brightness"))));
+
+    Ok(())
+}
+
 impl Metrics {
     fn new() -> Result<Metrics, Error> {
         let mut updates: Vec<Box<Update>> = Vec::new();
 
         for entry in fs::read_dir("/sys/class/backlight")? {
             let entry = entry?;
-            match entry.file_name().to_str() {
-                Some(name) if !name.starts_with(".") => name,
-                _ => continue,
-            }
-            let file_type = entry.file_type()?;
-            let file_type = if file_type.is_symlink() {
-                let metadata = fs::metadata(&entry.path())?;
-                metadata.file_type()
-            } else {
-                file_type
-            };
-            if !file_type.is_dir() {
-                continue;
-            };
-
             let path = entry.path();
-
-            // TODO: this is gonna break if a laptop has multiple backlights
-            //       but clearly that can never happen
-            updates.push(Box::new(from_file(
-                Gauge::new(
-                    "laptop_backlight_brightness",
-                    "current backlight brightness")?,
-                path.join("brightness"))));
-            updates.push(Box::new(from_file(
-                Gauge::new(
-                    "laptop_backlight_brightness_max",
-                    "maximum backlight brightness")?,
-                path.join("max_brightness"))));
+            add_backlight(&mut updates, &path).with_context(|_|
+                format!("couldn't check out {}", path.display()))?;
         }
 
         updates.push(Box::new(FileGauge {
