@@ -1,7 +1,7 @@
 #![feature(catch_expr)]
 
 use std::{
-    path, fs, time,
+    path, fs, time, net,
 
     str::FromStr,
     io::Read,
@@ -13,12 +13,22 @@ use std::{
 
 use failure::Error;
 
+use prometheus::{Opts,
+    Registry,
+    Gauge,
+    GaugeVec,
+    TextEncoder,
+    Encoder,
+};
+
+use structopt::StructOpt;
+
 extern crate prometheus;
 extern crate hyper;
 #[macro_use]
 extern crate failure;
-
-use prometheus::{Opts, Registry, Gauge, GaugeVec, TextEncoder, Encoder};
+#[macro_use]
+extern crate structopt;
 
 fn main() {
     main_().unwrap();
@@ -313,7 +323,15 @@ fn read_num<P: AsRef<path::Path>>(p: P) -> Result<f64, Error> {
     Ok(num)
 }
 
+#[derive(Debug, StructOpt)]
+struct Opt {
+    #[structopt(long = "bind-address", default_value = "127.0.0.1:24042")]
+    bind_address: net::SocketAddr,
+}
+
 fn main_() -> Result<(), Error> {
+    let opt = Opt::from_args();
+
     let mut metrics = Metrics::new()?;
     let registry = Registry::new();
     metrics.register(&registry)?;
@@ -352,7 +370,7 @@ fn main_() -> Result<(), Error> {
     };
 
     let server = hyper::server::Http::new()
-        .bind(&"127.0.0.1:24042".parse()?, new_service)?;
+        .bind(&opt.bind_address, new_service)?;
 
     server.run()?;
 
