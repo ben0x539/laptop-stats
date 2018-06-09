@@ -246,23 +246,21 @@ impl Metrics {
             }
         }
 
-        // TODO: dynamic
-        for i in 0..8 {
-            let path = format!(
-                "/sys/devices/system/cpu/cpufreq/policy{}/scaling_cur_freq",
-                i);
-            self.cpu_hz.get_metric_with_label_values(&[&i.to_string()])?
-                .set(read_num(&path)? * 1000.0);
-            let path = format!(
-                "/sys/devices/system/cpu/cpufreq/policy{}/scaling_min_freq",
-                i);
-            self.cpu_min_hz.get_metric_with_label_values(&[&i.to_string()])?
-                .set(read_num(&path)? * 1000.0);
-            let path = format!(
-                "/sys/devices/system/cpu/cpufreq/policy{}/scaling_max_freq",
-                i);
-            self.cpu_max_hz.get_metric_with_label_values(&[&i.to_string()])?
-                .set(read_num(&path)? * 1000.0);
+        for entry in fs::read_dir("/sys/devices/system/cpu/cpufreq")? {
+            let entry = entry?;
+            let file_name = entry.file_name();
+            let (num, path) = match file_name.to_str() {
+                Some(name) if name.starts_with("policy") => {
+                    (&name[6..], entry.path())
+                } _ => continue,
+            };
+
+            self.cpu_hz.get_metric_with_label_values(&[num])?
+                .set(read_num(&path.join("scaling_cur_freq"))? * 1000.0);
+            self.cpu_min_hz.get_metric_with_label_values(&[num])?
+                .set(read_num(&path.join("scaling_min_freq"))? * 1000.0);
+            self.cpu_max_hz.get_metric_with_label_values(&[num])?
+                .set(read_num(&path.join("scaling_max_freq"))? * 1000.0);
         }
 
         Ok(())
