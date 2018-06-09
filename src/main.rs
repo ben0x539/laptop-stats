@@ -158,16 +158,38 @@ impl Metrics {
     fn new() -> Result<Metrics, Error> {
         let mut updates: Vec<Box<Update>> = Vec::new();
 
-        updates.push(Box::new(from_file(
-            Gauge::new(
-                "laptop_backlight_brightness",
-                "current backlight brightness")?,
-            "/sys/class/backlight/acpi_video0/brightness")));
-        updates.push(Box::new(from_file(
-            Gauge::new(
-                "laptop_backlight_brightness_max",
-                "maximum backlight brightness")?,
-            "/sys/class/backlight/acpi_video0/max_brightness")));
+        for entry in fs::read_dir("/sys/class/backlight")? {
+            let entry = entry?;
+            match entry.file_name().to_str() {
+                Some(name) if !name.starts_with(".") => name,
+                _ => continue,
+            }
+            let file_type = entry.file_type()?;
+            let file_type = if file_type.is_symlink() {
+                let metadata = fs::metadata(&entry.path())?;
+                metadata.file_type()
+            } else {
+                file_type
+            };
+            if !file_type.is_dir() {
+                continue;
+            };
+
+            let path = entry.path();
+
+            // TODO: this is gonna break if a laptop has multiple backlights
+            //       but clearly that can never happen
+            updates.push(Box::new(from_file(
+                Gauge::new(
+                    "laptop_backlight_brightness",
+                    "current backlight brightness")?,
+                path.join("brightness"))));
+            updates.push(Box::new(from_file(
+                Gauge::new(
+                    "laptop_backlight_brightness_max",
+                    "maximum backlight brightness")?,
+                path.join("max_brightness"))));
+        }
 
         updates.push(Box::new(FileGauge {
             gauge: Gauge::new(
