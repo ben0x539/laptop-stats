@@ -11,7 +11,10 @@ use std::{
     }
 };
 
-use failure::Error;
+use failure::{
+    Error,
+    ResultExt,
+};
 
 use prometheus::{Opts,
     Registry,
@@ -312,9 +315,12 @@ impl Metrics {
 }
 
 fn read_file<P: AsRef<path::Path>>(p: P) -> Result<String, Error> {
-    let mut file = fs::File::open(p)?;
+    let p = p.as_ref();
+    let mut file = fs::File::open(p)
+        .with_context(|_| format!("couldn't open {}", p.display()))?;
     let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
+    file.read_to_string(&mut contents)
+        .with_context(|_| format!("couldn't read{}", p.display()))?;
     Ok(contents)
 }
 
