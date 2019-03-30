@@ -1,4 +1,4 @@
-#![feature(catch_expr)]
+#![feature(try_blocks)]
 
 use std::{
     path, fs, time, net,
@@ -25,13 +25,7 @@ use prometheus::{Opts,
 };
 
 use structopt::StructOpt;
-
-extern crate prometheus;
-extern crate hyper;
-#[macro_use]
-extern crate failure;
-#[macro_use]
-extern crate structopt;
+use failure::bail;
 
 fn main() {
     main_().unwrap();
@@ -51,7 +45,7 @@ struct Metrics {
 
 trait Update {
     fn update(&mut self) -> Result<(), Error>;
-    fn register(&mut self, &Registry) -> Result<(), Error>;
+    fn register(&mut self, _: &Registry) -> Result<(), Error>;
 }
 
 struct CpuTemp {
@@ -345,7 +339,7 @@ fn main_() -> Result<(), Error> {
         let registry = registry.clone();
         let metrics = metrics.clone();
         let f = move |_req| -> Result<hyper::server::Response, hyper::Error> {
-            let res: Result<_, _> = do catch {
+            let res: Result<_, _> = try {
                 metrics.lock().unwrap() // XXX
                     .maybe_update(time::Duration::from_secs(5))?;
 
