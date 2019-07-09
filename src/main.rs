@@ -14,6 +14,7 @@ use std::{
 use failure::{
     Error,
     ResultExt,
+    bail,
 };
 
 use prometheus::{Opts,
@@ -25,7 +26,6 @@ use prometheus::{Opts,
 };
 
 use structopt::StructOpt;
-use failure::bail;
 
 fn main() {
     main_().unwrap();
@@ -43,7 +43,7 @@ struct Metrics {
     last_update_time: time::Instant,
 }
 
-trait Update {
+trait Update: Send {
     fn update(&mut self) -> Result<(), Error>;
     fn register(&mut self, _: &Registry) -> Result<(), Error>;
 }
@@ -131,13 +131,13 @@ impl Update for CpuTemp {
     }
 }
 
-struct FileGauge<F: FnMut(String) -> Result<f64, Error>> {
+struct FileGauge<F: FnMut(String) -> Result<f64, Error>+Send> {
     gauge: Gauge,
     path: path::PathBuf,
     transform: F,
 }
 
-impl<F: FnMut(String) -> Result<f64, Error>> Update for FileGauge<F> {
+impl<F: FnMut(String) -> Result<f64, Error>+Send> Update for FileGauge<F> {
     fn update(&mut self) -> Result<(), Error> {
         let file_contents = read_file(&self.path)?;
         let value = (self.transform)(file_contents)?;
@@ -336,11 +336,14 @@ fn main_() -> Result<(), Error> {
     metrics.update()?;
     let metrics = Arc::new(Mutex::new(metrics));
 
+    use hyper::{Response, Body, rt::Future};
+
     let new_service = move || {
         let registry = registry.clone();
         let metrics = metrics.clone();
-        let f = move |_req| -> Result<hyper::server::Response, hyper::Error> {
-            let res: Result<_, _> = try {
+
+        let f = move |_req| -> Result<Response<Body>, hyper::Error> {
+            let res: Result<_, Error> = try {
                 metrics.lock().unwrap() // XXX
                     .maybe_update(time::Duration::from_secs(5))?;
 
@@ -349,28 +352,27 @@ fn main_() -> Result<(), Error> {
                 let encoder = TextEncoder::new();
                 encoder.encode(&metric_familys, &mut buffer)?;
 
-                let content_type =
-                    encoder.format_type().parse::<hyper::mime::Mime>()?;
-
-                hyper::server::Response::new()
-                    .with_header(hyper::header::ContentType(content_type))
-                    .with_body(buffer)
+                Response::builder()
+                    .header(hyper::header::CONTENT_TYPE, encoder.format_type())
+                    .body(Body::from(buffer))?
             };
             let resp = res.unwrap_or_else(|e: Error|
-                hyper::server::Response::new()
-                    .with_status(hyper::StatusCode::InternalServerError)
-                    .with_body(e.to_string()));
+                Response::builder()
+                    .status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
+                    .body(Body::from(e.to_string()))
+                    .unwrap());
 
             return Ok(resp);
         };
 
-        Ok(hyper::server::service_fn(f))
+        hyper::service::service_fn(f)
     };
 
-    let server = hyper::server::Http::new()
-        .bind(&opt.bind_address, new_service)?;
+    let server = hyper::Server::bind(&opt.bind_address)
+        .serve(new_service)
+        .map_err(|e| eprintln!("server error: {}", e));
 
-    server.run()?;
+    hyper::rt::run(server);
 
     Ok(())
 }

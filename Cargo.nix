@@ -42,31 +42,31 @@ rec {
   laptop_stats = crates.crates.laptop_stats."0.1.0" deps;
   __all = [ (laptop_stats {}) ];
   deps.ansi_term."0.10.2" = {};
+  deps.arrayvec."0.4.10" = {
+    nodrop = "0.1.13";
+  };
   deps.atty."0.2.10" = {
     termion = "1.5.1";
-    libc = "0.2.35";
+    libc = "0.2.59";
     winapi = "0.3.3";
   };
+  deps.autocfg."0.1.4" = {};
   deps.backtrace."0.3.5" = {
     cfg_if = "0.1.2";
     rustc_demangle = "0.1.5";
     backtrace_sys = "0.1.16";
-    libc = "0.2.35";
+    libc = "0.2.59";
     winapi = "0.3.3";
   };
   deps.backtrace_sys."0.1.16" = {
-    libc = "0.2.35";
+    libc = "0.2.59";
     cc = "1.0.3";
   };
-  deps.base64."0.9.0" = {
-    byteorder = "1.2.1";
-    safemem = "0.2.0";
-  };
-  deps.bitflags."0.7.0" = {};
   deps.bitflags."1.0.1" = {};
   deps.byteorder."1.2.1" = {};
-  deps.bytes."0.4.5" = {
+  deps.bytes."0.4.12" = {
     byteorder = "1.2.1";
+    either = "1.5.2";
     iovec = "0.1.1";
   };
   deps.cc."1.0.3" = {};
@@ -80,173 +80,280 @@ rec {
     vec_map = "0.8.1";
     ansi_term = "0.10.2";
   };
-  deps.failure."0.1.1" = {
-    backtrace = "0.3.5";
-    failure_derive = "0.1.1";
+  deps.cloudabi."0.0.3" = {
+    bitflags = "1.0.1";
   };
-  deps.failure_derive."0.1.1" = {
-    quote = "0.3.15";
-    syn = "0.11.11";
-    synstructure = "0.6.1";
+  deps.crossbeam_deque."0.7.1" = {
+    crossbeam_epoch = "0.7.1";
+    crossbeam_utils = "0.6.5";
+  };
+  deps.crossbeam_epoch."0.7.1" = {
+    arrayvec = "0.4.10";
+    cfg_if = "0.1.2";
+    crossbeam_utils = "0.6.5";
+    lazy_static = "1.3.0";
+    memoffset = "0.2.1";
+    scopeguard = "0.3.3";
+  };
+  deps.crossbeam_queue."0.1.2" = {
+    crossbeam_utils = "0.6.5";
+  };
+  deps.crossbeam_utils."0.6.5" = {
+    cfg_if = "0.1.2";
+    lazy_static = "1.3.0";
+  };
+  deps.either."1.5.2" = {};
+  deps.failure."0.1.5" = {
+    backtrace = "0.3.5";
+    failure_derive = "0.1.5";
+  };
+  deps.failure_derive."0.1.5" = {
+    proc_macro2 = "0.4.30";
+    quote = "0.6.3";
+    syn = "0.15.39";
+    synstructure = "0.10.2";
   };
   deps.fnv."1.0.6" = {};
-  deps.fuchsia_zircon."0.2.1" = {
-    fuchsia_zircon_sys = "0.2.0";
-  };
+  deps.fuchsia_cprng."0.1.1" = {};
   deps.fuchsia_zircon."0.3.2" = {
     bitflags = "1.0.1";
     fuchsia_zircon_sys = "0.3.2";
   };
-  deps.fuchsia_zircon_sys."0.2.0" = {
-    bitflags = "0.7.0";
-  };
   deps.fuchsia_zircon_sys."0.3.2" = {};
-  deps.futures."0.1.17" = {};
+  deps.futures."0.1.28" = {};
   deps.futures_cpupool."0.1.8" = {
-    futures = "0.1.17";
+    futures = "0.1.28";
     num_cpus = "1.8.0";
   };
-  deps.httparse."1.2.3" = {};
-  deps.hyper."0.11.10" = {
-    base64 = "0.9.0";
-    bytes = "0.4.5";
-    futures = "0.1.17";
-    futures_cpupool = "0.1.8";
-    httparse = "1.2.3";
-    language_tags = "0.2.2";
-    log = "0.3.9";
-    mime = "0.3.5";
-    percent_encoding = "1.0.1";
-    relay = "0.1.0";
-    time = "0.1.39";
-    tokio_core = "0.1.11";
-    tokio_io = "0.1.4";
-    tokio_proto = "0.1.1";
-    tokio_service = "0.1.0";
-    unicase = "2.1.0";
+  deps.h2."0.1.25" = {
+    byteorder = "1.2.1";
+    bytes = "0.4.12";
+    fnv = "1.0.6";
+    futures = "0.1.28";
+    http = "0.1.17";
+    indexmap = "1.0.2";
+    log = "0.4.1";
+    slab = "0.4.2";
+    string = "0.2.1";
+    tokio_io = "0.1.12";
   };
+  deps.heck."0.3.1" = {
+    unicode_segmentation = "1.3.0";
+  };
+  deps.http."0.1.17" = {
+    bytes = "0.4.12";
+    fnv = "1.0.6";
+    itoa = "0.4.4";
+  };
+  deps.http_body."0.1.0" = {
+    bytes = "0.4.12";
+    futures = "0.1.28";
+    http = "0.1.17";
+    tokio_buf = "0.1.1";
+  };
+  deps.httparse."1.2.3" = {};
+  deps.hyper."0.12.32" = {
+    bytes = "0.4.12";
+    futures = "0.1.28";
+    futures_cpupool = "0.1.8";
+    h2 = "0.1.25";
+    http = "0.1.17";
+    http_body = "0.1.0";
+    httparse = "1.2.3";
+    iovec = "0.1.1";
+    itoa = "0.4.4";
+    log = "0.4.1";
+    net2 = "0.2.33";
+    time = "0.1.39";
+    tokio = "0.1.22";
+    tokio_buf = "0.1.1";
+    tokio_executor = "0.1.8";
+    tokio_io = "0.1.12";
+    tokio_reactor = "0.1.9";
+    tokio_tcp = "0.1.3";
+    tokio_threadpool = "0.1.15";
+    tokio_timer = "0.2.11";
+    want = "0.2.0";
+    rustc_version = "0.2.3";
+  };
+  deps.indexmap."1.0.2" = {};
   deps.iovec."0.1.1" = {
-    libc = "0.2.35";
+    libc = "0.2.59";
     winapi = "0.2.8";
   };
+  deps.itoa."0.4.4" = {};
   deps.kernel32_sys."0.2.2" = {
     winapi = "0.2.8";
     winapi_build = "0.1.1";
   };
-  deps.language_tags."0.2.2" = {};
   deps.laptop_stats."0.1.0" = {
-    failure = "0.1.1";
-    hyper = "0.11.10";
-    prometheus = "0.3.6";
-    structopt = "0.2.10";
+    failure = "0.1.5";
+    hyper = "0.12.32";
+    prometheus = "0.3.13";
+    structopt = "0.2.18";
   };
   deps.lazy_static."0.2.11" = {};
-  deps.lazycell."0.5.1" = {};
-  deps.libc."0.2.35" = {};
-  deps.log."0.3.9" = {
-    log = "0.4.1";
+  deps.lazy_static."1.3.0" = {};
+  deps.libc."0.2.59" = {};
+  deps.lock_api."0.1.5" = {
+    owning_ref = "0.4.0";
+    scopeguard = "0.3.3";
   };
   deps.log."0.4.1" = {
     cfg_if = "0.1.2";
   };
-  deps.mime."0.3.5" = {
-    unicase = "2.1.0";
-  };
-  deps.mio."0.6.11" = {
+  deps.memoffset."0.2.1" = {};
+  deps.mio."0.6.19" = {
     iovec = "0.1.1";
-    lazycell = "0.5.1";
-    log = "0.3.9";
-    net2 = "0.2.31";
-    slab = "0.3.0";
-    fuchsia_zircon = "0.2.1";
-    fuchsia_zircon_sys = "0.2.0";
-    libc = "0.2.35";
+    log = "0.4.1";
+    net2 = "0.2.33";
+    slab = "0.4.2";
+    fuchsia_zircon = "0.3.2";
+    fuchsia_zircon_sys = "0.3.2";
+    libc = "0.2.59";
     kernel32_sys = "0.2.2";
     miow = "0.2.1";
     winapi = "0.2.8";
   };
   deps.miow."0.2.1" = {
     kernel32_sys = "0.2.2";
-    net2 = "0.2.31";
+    net2 = "0.2.33";
     winapi = "0.2.8";
     ws2_32_sys = "0.2.1";
   };
-  deps.net2."0.2.31" = {
+  deps.net2."0.2.33" = {
     cfg_if = "0.1.2";
-    libc = "0.2.35";
-    kernel32_sys = "0.2.2";
-    winapi = "0.2.8";
-    ws2_32_sys = "0.2.1";
+    libc = "0.2.59";
+    winapi = "0.3.3";
   };
+  deps.nodrop."0.1.13" = {};
   deps.num_cpus."1.8.0" = {
-    libc = "0.2.35";
+    libc = "0.2.59";
   };
-  deps.percent_encoding."1.0.1" = {};
-  deps.proc_macro2."0.4.6" = {
+  deps.owning_ref."0.4.0" = {
+    stable_deref_trait = "1.1.1";
+  };
+  deps.parking_lot."0.7.1" = {
+    lock_api = "0.1.5";
+    parking_lot_core = "0.4.0";
+  };
+  deps.parking_lot_core."0.4.0" = {
+    rand = "0.6.5";
+    smallvec = "0.6.10";
+    rustc_version = "0.2.3";
+    libc = "0.2.59";
+    winapi = "0.3.3";
+  };
+  deps.proc_macro2."0.4.30" = {
     unicode_xid = "0.1.0";
   };
-  deps.prometheus."0.3.6" = {
+  deps.prometheus."0.3.13" = {
     cfg_if = "0.1.2";
     fnv = "1.0.6";
     lazy_static = "0.2.11";
-    protobuf = "1.4.3";
+    protobuf = "1.7.5";
     quick_error = "0.2.2";
-    spin = "0.4.6";
+    spin = "0.4.10";
   };
-  deps.protobuf."1.4.3" = {};
+  deps.protobuf."1.7.5" = {};
   deps.quick_error."0.2.2" = {};
-  deps.quote."0.3.15" = {};
   deps.quote."0.6.3" = {
-    proc_macro2 = "0.4.6";
+    proc_macro2 = "0.4.30";
   };
-  deps.rand."0.3.19" = {
-    libc = "0.2.35";
-    fuchsia_zircon = "0.3.2";
+  deps.rand."0.6.5" = {
+    rand_chacha = "0.1.1";
+    rand_core = "0.4.0";
+    rand_hc = "0.1.0";
+    rand_isaac = "0.1.1";
+    rand_jitter = "0.1.4";
+    rand_os = "0.1.3";
+    rand_pcg = "0.1.2";
+    rand_xorshift = "0.1.1";
+    autocfg = "0.1.4";
+    libc = "0.2.59";
+    winapi = "0.3.3";
+  };
+  deps.rand_chacha."0.1.1" = {
+    rand_core = "0.3.1";
+    autocfg = "0.1.4";
+  };
+  deps.rand_core."0.3.1" = {
+    rand_core = "0.4.0";
+  };
+  deps.rand_core."0.4.0" = {};
+  deps.rand_hc."0.1.0" = {
+    rand_core = "0.3.1";
+  };
+  deps.rand_isaac."0.1.1" = {
+    rand_core = "0.3.1";
+  };
+  deps.rand_jitter."0.1.4" = {
+    rand_core = "0.4.0";
+    libc = "0.2.59";
+    winapi = "0.3.3";
+  };
+  deps.rand_os."0.1.3" = {
+    rand_core = "0.4.0";
+    rdrand = "0.4.0";
+    cloudabi = "0.0.3";
+    fuchsia_cprng = "0.1.1";
+    libc = "0.2.59";
+    winapi = "0.3.3";
+  };
+  deps.rand_pcg."0.1.2" = {
+    rand_core = "0.4.0";
+    autocfg = "0.1.4";
+  };
+  deps.rand_xorshift."0.1.1" = {
+    rand_core = "0.3.1";
+  };
+  deps.rdrand."0.4.0" = {
+    rand_core = "0.3.1";
   };
   deps.redox_syscall."0.1.34" = {};
   deps.redox_termios."0.1.1" = {
     redox_syscall = "0.1.34";
   };
-  deps.relay."0.1.0" = {
-    futures = "0.1.17";
-  };
   deps.rustc_demangle."0.1.5" = {};
-  deps.safemem."0.2.0" = {};
-  deps.scoped_tls."0.1.0" = {};
-  deps.slab."0.3.0" = {};
-  deps.slab."0.4.0" = {};
-  deps.smallvec."0.2.1" = {};
-  deps.spin."0.4.6" = {};
+  deps.rustc_version."0.2.3" = {
+    semver = "0.9.0";
+  };
+  deps.scopeguard."0.3.3" = {};
+  deps.semver."0.9.0" = {
+    semver_parser = "0.7.0";
+  };
+  deps.semver_parser."0.7.0" = {};
+  deps.slab."0.4.2" = {};
+  deps.smallvec."0.6.10" = {};
+  deps.spin."0.4.10" = {};
+  deps.stable_deref_trait."1.1.1" = {};
+  deps.string."0.2.1" = {
+    bytes = "0.4.12";
+  };
   deps.strsim."0.7.0" = {};
-  deps.structopt."0.2.10" = {
+  deps.structopt."0.2.18" = {
     clap = "2.30.0";
-    structopt_derive = "0.2.10";
+    structopt_derive = "0.2.18";
   };
-  deps.structopt_derive."0.2.10" = {
-    proc_macro2 = "0.4.6";
+  deps.structopt_derive."0.2.18" = {
+    heck = "0.3.1";
+    proc_macro2 = "0.4.30";
     quote = "0.6.3";
-    syn = "0.14.2";
+    syn = "0.15.39";
   };
-  deps.syn."0.11.11" = {
-    quote = "0.3.15";
-    synom = "0.11.3";
-    unicode_xid = "0.0.4";
-  };
-  deps.syn."0.14.2" = {
-    proc_macro2 = "0.4.6";
+  deps.syn."0.15.39" = {
+    proc_macro2 = "0.4.30";
     quote = "0.6.3";
     unicode_xid = "0.1.0";
   };
-  deps.synom."0.11.3" = {
-    unicode_xid = "0.0.4";
+  deps.synstructure."0.10.2" = {
+    proc_macro2 = "0.4.30";
+    quote = "0.6.3";
+    syn = "0.15.39";
+    unicode_xid = "0.1.0";
   };
-  deps.synstructure."0.6.1" = {
-    quote = "0.3.15";
-    syn = "0.11.11";
-  };
-  deps.take."0.1.0" = {};
   deps.termion."1.5.1" = {
-    libc = "0.2.35";
+    libc = "0.2.59";
     redox_syscall = "0.1.34";
     redox_termios = "0.1.1";
   };
@@ -254,48 +361,92 @@ rec {
     unicode_width = "0.1.5";
   };
   deps.time."0.1.39" = {
-    libc = "0.2.35";
+    libc = "0.2.59";
     redox_syscall = "0.1.34";
     winapi = "0.3.3";
   };
-  deps.tokio_core."0.1.11" = {
-    bytes = "0.4.5";
-    futures = "0.1.17";
+  deps.tokio."0.1.22" = {
+    bytes = "0.4.12";
+    futures = "0.1.28";
+    mio = "0.6.19";
+    num_cpus = "1.8.0";
+    tokio_current_thread = "0.1.6";
+    tokio_executor = "0.1.8";
+    tokio_io = "0.1.12";
+    tokio_reactor = "0.1.9";
+    tokio_threadpool = "0.1.15";
+    tokio_timer = "0.2.11";
+  };
+  deps.tokio_buf."0.1.1" = {
+    bytes = "0.4.12";
+    either = "1.5.2";
+    futures = "0.1.28";
+  };
+  deps.tokio_current_thread."0.1.6" = {
+    futures = "0.1.28";
+    tokio_executor = "0.1.8";
+  };
+  deps.tokio_executor."0.1.8" = {
+    crossbeam_utils = "0.6.5";
+    futures = "0.1.28";
+  };
+  deps.tokio_io."0.1.12" = {
+    bytes = "0.4.12";
+    futures = "0.1.28";
+    log = "0.4.1";
+  };
+  deps.tokio_reactor."0.1.9" = {
+    crossbeam_utils = "0.6.5";
+    futures = "0.1.28";
+    lazy_static = "1.3.0";
+    log = "0.4.1";
+    mio = "0.6.19";
+    num_cpus = "1.8.0";
+    parking_lot = "0.7.1";
+    slab = "0.4.2";
+    tokio_executor = "0.1.8";
+    tokio_io = "0.1.12";
+    tokio_sync = "0.1.6";
+  };
+  deps.tokio_sync."0.1.6" = {
+    fnv = "1.0.6";
+    futures = "0.1.28";
+  };
+  deps.tokio_tcp."0.1.3" = {
+    bytes = "0.4.12";
+    futures = "0.1.28";
     iovec = "0.1.1";
-    log = "0.3.9";
-    mio = "0.6.11";
-    scoped_tls = "0.1.0";
-    slab = "0.4.0";
-    tokio_io = "0.1.4";
+    mio = "0.6.19";
+    tokio_io = "0.1.12";
+    tokio_reactor = "0.1.9";
   };
-  deps.tokio_io."0.1.4" = {
-    bytes = "0.4.5";
-    futures = "0.1.17";
-    log = "0.3.9";
+  deps.tokio_threadpool."0.1.15" = {
+    crossbeam_deque = "0.7.1";
+    crossbeam_queue = "0.1.2";
+    crossbeam_utils = "0.6.5";
+    futures = "0.1.28";
+    log = "0.4.1";
+    num_cpus = "1.8.0";
+    rand = "0.6.5";
+    slab = "0.4.2";
+    tokio_executor = "0.1.8";
   };
-  deps.tokio_proto."0.1.1" = {
-    futures = "0.1.17";
-    log = "0.3.9";
-    net2 = "0.2.31";
-    rand = "0.3.19";
-    slab = "0.3.0";
-    smallvec = "0.2.1";
-    take = "0.1.0";
-    tokio_core = "0.1.11";
-    tokio_io = "0.1.4";
-    tokio_service = "0.1.0";
+  deps.tokio_timer."0.2.11" = {
+    crossbeam_utils = "0.6.5";
+    futures = "0.1.28";
+    slab = "0.4.2";
+    tokio_executor = "0.1.8";
   };
-  deps.tokio_service."0.1.0" = {
-    futures = "0.1.17";
-  };
-  deps.unicase."2.1.0" = {
-    version_check = "0.1.3";
-  };
+  deps.try_lock."0.2.2" = {};
+  deps.unicode_segmentation."1.3.0" = {};
   deps.unicode_width."0.1.5" = {};
-  deps.unicode_xid."0.0.4" = {};
   deps.unicode_xid."0.1.0" = {};
   deps.vec_map."0.8.1" = {};
-  deps.version_check."0.1.3" = {};
+  deps.want."0.2.0" = {
+    futures = "0.1.28";
+    log = "0.4.1";
+    try_lock = "0.2.2";
+  };
   deps.winapi."0.2.8" = {};
   deps.winapi."0.3.3" = {
     winapi_i686_pc_windows_gnu = "0.3.2";
