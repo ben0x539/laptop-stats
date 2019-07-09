@@ -105,127 +105,151 @@ rec {
 
 
 # end
-# backtrace-0.3.5
+# backtrace-0.3.12
 
-  crates.backtrace."0.3.5" = deps: { features?(features_.backtrace."0.3.5" deps {}) }: buildRustCrate {
+  crates.backtrace."0.3.12" = deps: { features?(features_.backtrace."0.3.12" deps {}) }: buildRustCrate {
     crateName = "backtrace";
-    version = "0.3.5";
+    version = "0.3.12";
     description = "A library to acquire a stack trace (backtrace) at runtime in a Rust program.\n";
     authors = [ "Alex Crichton <alex@alexcrichton.com>" "The Rust Project Developers" ];
-    sha256 = "0vj1dgsivxci5r43w9d56yb98g3r7ff75zr5f592j7yizznshh2r";
+    sha256 = "0zknvh8qqq7zvcbbzwgvz0n5qa8h318gk7jbbfmx2a2w5fh562h6";
     dependencies = mapFeatures features ([
-      (crates."cfg_if"."${deps."backtrace"."0.3.5"."cfg_if"}" deps)
-      (crates."rustc_demangle"."${deps."backtrace"."0.3.5"."rustc_demangle"}" deps)
+      (crates."cfg_if"."${deps."backtrace"."0.3.12"."cfg_if"}" deps)
+      (crates."rustc_demangle"."${deps."backtrace"."0.3.12"."rustc_demangle"}" deps)
     ])
       ++ (if (kernel == "linux" || kernel == "darwin") && !(kernel == "fuchsia") && !(kernel == "emscripten") && !(kernel == "darwin") && !(kernel == "ios") then mapFeatures features ([
     ]
-      ++ (if features.backtrace."0.3.5".backtrace-sys or false then [ (crates.backtrace_sys."${deps."backtrace"."0.3.5".backtrace_sys}" deps) ] else [])) else [])
+      ++ (if features.backtrace."0.3.12".backtrace-sys or false then [ (crates.backtrace_sys."${deps."backtrace"."0.3.12".backtrace_sys}" deps) ] else [])) else [])
       ++ (if (kernel == "linux" || kernel == "darwin") then mapFeatures features ([
-      (crates."libc"."${deps."backtrace"."0.3.5"."libc"}" deps)
+      (crates."libc"."${deps."backtrace"."0.3.12"."libc"}" deps)
     ]) else [])
       ++ (if kernel == "windows" then mapFeatures features ([
-    ]
-      ++ (if features.backtrace."0.3.5".winapi or false then [ (crates.winapi."${deps."backtrace"."0.3.5".winapi}" deps) ] else [])) else []);
-    features = mkFeatures (features."backtrace"."0.3.5" or {});
+      (crates."winapi"."${deps."backtrace"."0.3.12"."winapi"}" deps)
+    ]) else []);
+    features = mkFeatures (features."backtrace"."0.3.12" or {});
   };
-  features_.backtrace."0.3.5" = deps: f: updateFeatures f (rec {
+  features_.backtrace."0.3.12" = deps: f: updateFeatures f (rec {
     backtrace = fold recursiveUpdate {} [
-      { "0.3.5"."addr2line" =
-        (f.backtrace."0.3.5"."addr2line" or false) ||
-        (f.backtrace."0.3.5".gimli-symbolize or false) ||
-        (backtrace."0.3.5"."gimli-symbolize" or false); }
-      { "0.3.5"."backtrace-sys" =
-        (f.backtrace."0.3.5"."backtrace-sys" or false) ||
-        (f.backtrace."0.3.5".libbacktrace or false) ||
-        (backtrace."0.3.5"."libbacktrace" or false); }
-      { "0.3.5"."coresymbolication" =
-        (f.backtrace."0.3.5"."coresymbolication" or false) ||
-        (f.backtrace."0.3.5".default or false) ||
-        (backtrace."0.3.5"."default" or false); }
-      { "0.3.5"."dbghelp" =
-        (f.backtrace."0.3.5"."dbghelp" or false) ||
-        (f.backtrace."0.3.5".default or false) ||
-        (backtrace."0.3.5"."default" or false); }
-      { "0.3.5"."dladdr" =
-        (f.backtrace."0.3.5"."dladdr" or false) ||
-        (f.backtrace."0.3.5".default or false) ||
-        (backtrace."0.3.5"."default" or false); }
-      { "0.3.5"."findshlibs" =
-        (f.backtrace."0.3.5"."findshlibs" or false) ||
-        (f.backtrace."0.3.5".gimli-symbolize or false) ||
-        (backtrace."0.3.5"."gimli-symbolize" or false); }
-      { "0.3.5"."libbacktrace" =
-        (f.backtrace."0.3.5"."libbacktrace" or false) ||
-        (f.backtrace."0.3.5".default or false) ||
-        (backtrace."0.3.5"."default" or false); }
-      { "0.3.5"."libunwind" =
-        (f.backtrace."0.3.5"."libunwind" or false) ||
-        (f.backtrace."0.3.5".default or false) ||
-        (backtrace."0.3.5"."default" or false); }
-      { "0.3.5"."rustc-serialize" =
-        (f.backtrace."0.3.5"."rustc-serialize" or false) ||
-        (f.backtrace."0.3.5".serialize-rustc or false) ||
-        (backtrace."0.3.5"."serialize-rustc" or false); }
-      { "0.3.5"."serde" =
-        (f.backtrace."0.3.5"."serde" or false) ||
-        (f.backtrace."0.3.5".serialize-serde or false) ||
-        (backtrace."0.3.5"."serialize-serde" or false); }
-      { "0.3.5"."serde_derive" =
-        (f.backtrace."0.3.5"."serde_derive" or false) ||
-        (f.backtrace."0.3.5".serialize-serde or false) ||
-        (backtrace."0.3.5"."serialize-serde" or false); }
-      { "0.3.5"."winapi" =
-        (f.backtrace."0.3.5"."winapi" or false) ||
-        (f.backtrace."0.3.5".dbghelp or false) ||
-        (backtrace."0.3.5"."dbghelp" or false); }
-      { "0.3.5".default = (f.backtrace."0.3.5".default or true); }
+      { "0.3.12"."addr2line" =
+        (f.backtrace."0.3.12"."addr2line" or false) ||
+        (f.backtrace."0.3.12".gimli-symbolize or false) ||
+        (backtrace."0.3.12"."gimli-symbolize" or false); }
+      { "0.3.12"."backtrace-sys" =
+        (f.backtrace."0.3.12"."backtrace-sys" or false) ||
+        (f.backtrace."0.3.12".libbacktrace or false) ||
+        (backtrace."0.3.12"."libbacktrace" or false); }
+      { "0.3.12"."coresymbolication" =
+        (f.backtrace."0.3.12"."coresymbolication" or false) ||
+        (f.backtrace."0.3.12".default or false) ||
+        (backtrace."0.3.12"."default" or false); }
+      { "0.3.12"."dbghelp" =
+        (f.backtrace."0.3.12"."dbghelp" or false) ||
+        (f.backtrace."0.3.12".default or false) ||
+        (backtrace."0.3.12"."default" or false); }
+      { "0.3.12"."dladdr" =
+        (f.backtrace."0.3.12"."dladdr" or false) ||
+        (f.backtrace."0.3.12".default or false) ||
+        (backtrace."0.3.12"."default" or false); }
+      { "0.3.12"."findshlibs" =
+        (f.backtrace."0.3.12"."findshlibs" or false) ||
+        (f.backtrace."0.3.12".gimli-symbolize or false) ||
+        (backtrace."0.3.12"."gimli-symbolize" or false); }
+      { "0.3.12"."gimli" =
+        (f.backtrace."0.3.12"."gimli" or false) ||
+        (f.backtrace."0.3.12".gimli-symbolize or false) ||
+        (backtrace."0.3.12"."gimli-symbolize" or false); }
+      { "0.3.12"."libbacktrace" =
+        (f.backtrace."0.3.12"."libbacktrace" or false) ||
+        (f.backtrace."0.3.12".default or false) ||
+        (backtrace."0.3.12"."default" or false); }
+      { "0.3.12"."libunwind" =
+        (f.backtrace."0.3.12"."libunwind" or false) ||
+        (f.backtrace."0.3.12".default or false) ||
+        (backtrace."0.3.12"."default" or false); }
+      { "0.3.12"."memmap" =
+        (f.backtrace."0.3.12"."memmap" or false) ||
+        (f.backtrace."0.3.12".gimli-symbolize or false) ||
+        (backtrace."0.3.12"."gimli-symbolize" or false); }
+      { "0.3.12"."object" =
+        (f.backtrace."0.3.12"."object" or false) ||
+        (f.backtrace."0.3.12".gimli-symbolize or false) ||
+        (backtrace."0.3.12"."gimli-symbolize" or false); }
+      { "0.3.12"."rustc-serialize" =
+        (f.backtrace."0.3.12"."rustc-serialize" or false) ||
+        (f.backtrace."0.3.12".serialize-rustc or false) ||
+        (backtrace."0.3.12"."serialize-rustc" or false); }
+      { "0.3.12"."serde" =
+        (f.backtrace."0.3.12"."serde" or false) ||
+        (f.backtrace."0.3.12".serialize-serde or false) ||
+        (backtrace."0.3.12"."serialize-serde" or false); }
+      { "0.3.12"."serde_derive" =
+        (f.backtrace."0.3.12"."serde_derive" or false) ||
+        (f.backtrace."0.3.12".serialize-serde or false) ||
+        (backtrace."0.3.12"."serialize-serde" or false); }
+      { "0.3.12"."std" =
+        (f.backtrace."0.3.12"."std" or false) ||
+        (f.backtrace."0.3.12".default or false) ||
+        (backtrace."0.3.12"."default" or false) ||
+        (f.backtrace."0.3.12".libbacktrace or false) ||
+        (backtrace."0.3.12"."libbacktrace" or false); }
+      { "0.3.12".default = (f.backtrace."0.3.12".default or true); }
     ];
-    backtrace_sys."${deps.backtrace."0.3.5".backtrace_sys}".default = true;
-    cfg_if."${deps.backtrace."0.3.5".cfg_if}".default = true;
-    libc."${deps.backtrace."0.3.5".libc}".default = true;
-    rustc_demangle."${deps.backtrace."0.3.5".rustc_demangle}".default = true;
+    backtrace_sys."${deps.backtrace."0.3.12".backtrace_sys}".default = true;
+    cfg_if."${deps.backtrace."0.3.12".cfg_if}".default = true;
+    libc."${deps.backtrace."0.3.12".libc}".default = (f.libc."${deps.backtrace."0.3.12".libc}".default or false);
+    rustc_demangle."${deps.backtrace."0.3.12".rustc_demangle}".default = true;
     winapi = fold recursiveUpdate {} [
-      { "${deps.backtrace."0.3.5".winapi}"."dbghelp" = true; }
-      { "${deps.backtrace."0.3.5".winapi}"."minwindef" = true; }
-      { "${deps.backtrace."0.3.5".winapi}"."processthreadsapi" = true; }
-      { "${deps.backtrace."0.3.5".winapi}"."std" = true; }
-      { "${deps.backtrace."0.3.5".winapi}"."winnt" = true; }
-      { "${deps.backtrace."0.3.5".winapi}".default = true; }
+      { "${deps.backtrace."0.3.12".winapi}"."dbghelp" = true; }
+      { "${deps.backtrace."0.3.12".winapi}"."minwindef" = true; }
+      { "${deps.backtrace."0.3.12".winapi}"."processthreadsapi" = true; }
+      { "${deps.backtrace."0.3.12".winapi}"."winnt" = true; }
+      { "${deps.backtrace."0.3.12".winapi}".default = true; }
     ];
   }) [
-    (features_.cfg_if."${deps."backtrace"."0.3.5"."cfg_if"}" deps)
-    (features_.rustc_demangle."${deps."backtrace"."0.3.5"."rustc_demangle"}" deps)
-    (features_.backtrace_sys."${deps."backtrace"."0.3.5"."backtrace_sys"}" deps)
-    (features_.libc."${deps."backtrace"."0.3.5"."libc"}" deps)
-    (features_.winapi."${deps."backtrace"."0.3.5"."winapi"}" deps)
+    (features_.cfg_if."${deps."backtrace"."0.3.12"."cfg_if"}" deps)
+    (features_.rustc_demangle."${deps."backtrace"."0.3.12"."rustc_demangle"}" deps)
+    (features_.backtrace_sys."${deps."backtrace"."0.3.12"."backtrace_sys"}" deps)
+    (features_.libc."${deps."backtrace"."0.3.12"."libc"}" deps)
+    (features_.winapi."${deps."backtrace"."0.3.12"."winapi"}" deps)
   ];
 
 
 # end
-# backtrace-sys-0.1.16
+# backtrace-sys-0.1.30
 
-  crates.backtrace_sys."0.1.16" = deps: { features?(features_.backtrace_sys."0.1.16" deps {}) }: buildRustCrate {
+  crates.backtrace_sys."0.1.30" = deps: { features?(features_.backtrace_sys."0.1.30" deps {}) }: buildRustCrate {
     crateName = "backtrace-sys";
-    version = "0.1.16";
+    version = "0.1.30";
     description = "Bindings to the libbacktrace gcc library\n";
     authors = [ "Alex Crichton <alex@alexcrichton.com>" ];
-    sha256 = "1cn2c8q3dn06crmnk0p62czkngam4l8nf57wy33nz1y5g25pszwy";
+    sha256 = "023k63xhlkm15hj2j75sqlsa28qc3f3szs1rdlnz09xzs04f42qn";
     build = "build.rs";
     dependencies = mapFeatures features ([
-      (crates."libc"."${deps."backtrace_sys"."0.1.16"."libc"}" deps)
+      (crates."libc"."${deps."backtrace_sys"."0.1.30"."libc"}" deps)
     ]);
 
     buildDependencies = mapFeatures features ([
-      (crates."cc"."${deps."backtrace_sys"."0.1.16"."cc"}" deps)
+      (crates."cc"."${deps."backtrace_sys"."0.1.30"."cc"}" deps)
     ]);
+    features = mkFeatures (features."backtrace_sys"."0.1.30" or {});
   };
-  features_.backtrace_sys."0.1.16" = deps: f: updateFeatures f (rec {
-    backtrace_sys."0.1.16".default = (f.backtrace_sys."0.1.16".default or true);
-    cc."${deps.backtrace_sys."0.1.16".cc}".default = true;
-    libc."${deps.backtrace_sys."0.1.16".libc}".default = true;
+  features_.backtrace_sys."0.1.30" = deps: f: updateFeatures f (rec {
+    backtrace_sys = fold recursiveUpdate {} [
+      { "0.1.30"."compiler_builtins" =
+        (f.backtrace_sys."0.1.30"."compiler_builtins" or false) ||
+        (f.backtrace_sys."0.1.30".rustc-dep-of-std or false) ||
+        (backtrace_sys."0.1.30"."rustc-dep-of-std" or false); }
+      { "0.1.30"."core" =
+        (f.backtrace_sys."0.1.30"."core" or false) ||
+        (f.backtrace_sys."0.1.30".rustc-dep-of-std or false) ||
+        (backtrace_sys."0.1.30"."rustc-dep-of-std" or false); }
+      { "0.1.30".default = (f.backtrace_sys."0.1.30".default or true); }
+    ];
+    cc."${deps.backtrace_sys."0.1.30".cc}".default = true;
+    libc."${deps.backtrace_sys."0.1.30".libc}".default = (f.libc."${deps.backtrace_sys."0.1.30".libc}".default or false);
   }) [
-    (features_.libc."${deps."backtrace_sys"."0.1.16"."libc"}" deps)
-    (features_.cc."${deps."backtrace_sys"."0.1.16"."cc"}" deps)
+    (features_.libc."${deps."backtrace_sys"."0.1.30"."libc"}" deps)
+    (features_.cc."${deps."backtrace_sys"."0.1.30"."cc"}" deps)
   ];
 
 
@@ -308,25 +332,25 @@ rec {
 
 
 # end
-# cc-1.0.3
+# cc-1.0.37
 
-  crates.cc."1.0.3" = deps: { features?(features_.cc."1.0.3" deps {}) }: buildRustCrate {
+  crates.cc."1.0.37" = deps: { features?(features_.cc."1.0.37" deps {}) }: buildRustCrate {
     crateName = "cc";
-    version = "1.0.3";
+    version = "1.0.37";
     description = "A build-time dependency for Cargo build scripts to assist in invoking the native\nC compiler to compile native C code into a static archive to be linked into Rust\ncode.\n";
     authors = [ "Alex Crichton <alex@alexcrichton.com>" ];
-    sha256 = "193pwqgh79w6k0k29svyds5nnlrwx44myqyrw605d5jj4yk2zmpr";
+    sha256 = "1m5s357yi2amgd0kd8chxdcbnscyxwxifmf5hgv92x5xj56b3shj";
     dependencies = mapFeatures features ([
 ]);
-    features = mkFeatures (features."cc"."1.0.3" or {});
+    features = mkFeatures (features."cc"."1.0.37" or {});
   };
-  features_.cc."1.0.3" = deps: f: updateFeatures f (rec {
+  features_.cc."1.0.37" = deps: f: updateFeatures f (rec {
     cc = fold recursiveUpdate {} [
-      { "1.0.3"."rayon" =
-        (f.cc."1.0.3"."rayon" or false) ||
-        (f.cc."1.0.3".parallel or false) ||
-        (cc."1.0.3"."parallel" or false); }
-      { "1.0.3".default = (f.cc."1.0.3".default or true); }
+      { "1.0.37"."rayon" =
+        (f.cc."1.0.37"."rayon" or false) ||
+        (f.cc."1.0.37".parallel or false) ||
+        (cc."1.0.37"."parallel" or false); }
+      { "1.0.37".default = (f.cc."1.0.37".default or true); }
     ];
   }) [];
 
@@ -1227,38 +1251,6 @@ rec {
 
 
 # end
-# lazy_static-0.2.11
-
-  crates.lazy_static."0.2.11" = deps: { features?(features_.lazy_static."0.2.11" deps {}) }: buildRustCrate {
-    crateName = "lazy_static";
-    version = "0.2.11";
-    description = "A macro for declaring lazily evaluated statics in Rust.";
-    authors = [ "Marvin Löbel <loebel.marvin@gmail.com>" ];
-    sha256 = "1x6871cvpy5b96yv4c7jvpq316fp5d4609s9py7qk6cd6x9k34vm";
-    dependencies = mapFeatures features ([
-]);
-    features = mkFeatures (features."lazy_static"."0.2.11" or {});
-  };
-  features_.lazy_static."0.2.11" = deps: f: updateFeatures f (rec {
-    lazy_static = fold recursiveUpdate {} [
-      { "0.2.11"."compiletest_rs" =
-        (f.lazy_static."0.2.11"."compiletest_rs" or false) ||
-        (f.lazy_static."0.2.11".compiletest or false) ||
-        (lazy_static."0.2.11"."compiletest" or false); }
-      { "0.2.11"."nightly" =
-        (f.lazy_static."0.2.11"."nightly" or false) ||
-        (f.lazy_static."0.2.11".spin_no_std or false) ||
-        (lazy_static."0.2.11"."spin_no_std" or false); }
-      { "0.2.11"."spin" =
-        (f.lazy_static."0.2.11"."spin" or false) ||
-        (f.lazy_static."0.2.11".spin_no_std or false) ||
-        (lazy_static."0.2.11"."spin_no_std" or false); }
-      { "0.2.11".default = (f.lazy_static."0.2.11".default or true); }
-    ];
-  }) [];
-
-
-# end
 # lazy_static-1.3.0
 
   crates.lazy_static."1.3.0" = deps: { features?(features_.lazy_static."1.3.0" deps {}) }: buildRustCrate {
@@ -1730,111 +1722,118 @@ rec {
 
 
 # end
-# prometheus-0.3.13
+# prometheus-0.7.0
 
-  crates.prometheus."0.3.13" = deps: { features?(features_.prometheus."0.3.13" deps {}) }: buildRustCrate {
+  crates.prometheus."0.7.0" = deps: { features?(features_.prometheus."0.7.0" deps {}) }: buildRustCrate {
     crateName = "prometheus";
-    version = "0.3.13";
+    version = "0.7.0";
     description = "Prometheus instrumentation library for Rust applications.";
-    authors = [ "overvenus@gmail.com" "siddontang@gmail.com" ];
-    sha256 = "0s3dmvxfz5yml3wf2f35l2rdlwliq3dxqz1mawfpak7bphg7rzwn";
+    authors = [ "overvenus@gmail.com" "siddontang@gmail.com" "vistaswx@gmail.com" ];
+    edition = "2018";
+    sha256 = "0arwyslkfrpfsjr4k47f0shlj0vfhmvfn7qn47hghkmgaf88ah0i";
     dependencies = mapFeatures features ([
-      (crates."cfg_if"."${deps."prometheus"."0.3.13"."cfg_if"}" deps)
-      (crates."fnv"."${deps."prometheus"."0.3.13"."fnv"}" deps)
-      (crates."lazy_static"."${deps."prometheus"."0.3.13"."lazy_static"}" deps)
-      (crates."protobuf"."${deps."prometheus"."0.3.13"."protobuf"}" deps)
-      (crates."quick_error"."${deps."prometheus"."0.3.13"."quick_error"}" deps)
-      (crates."spin"."${deps."prometheus"."0.3.13"."spin"}" deps)
-    ])
+      (crates."cfg_if"."${deps."prometheus"."0.7.0"."cfg_if"}" deps)
+      (crates."fnv"."${deps."prometheus"."0.7.0"."fnv"}" deps)
+      (crates."lazy_static"."${deps."prometheus"."0.7.0"."lazy_static"}" deps)
+      (crates."quick_error"."${deps."prometheus"."0.7.0"."quick_error"}" deps)
+      (crates."spin"."${deps."prometheus"."0.7.0"."spin"}" deps)
+    ]
+      ++ (if features.prometheus."0.7.0".protobuf or false then [ (crates.protobuf."${deps."prometheus"."0.7.0".protobuf}" deps) ] else []))
       ++ (if kernel == "linux" then mapFeatures features ([
 ]) else []);
-    features = mkFeatures (features."prometheus"."0.3.13" or {});
+
+    buildDependencies = mapFeatures features ([
+]);
+    features = mkFeatures (features."prometheus"."0.7.0" or {});
   };
-  features_.prometheus."0.3.13" = deps: f: updateFeatures f (rec {
-    cfg_if."${deps.prometheus."0.3.13".cfg_if}".default = true;
-    fnv."${deps.prometheus."0.3.13".fnv}".default = true;
-    lazy_static."${deps.prometheus."0.3.13".lazy_static}".default = true;
+  features_.prometheus."0.7.0" = deps: f: updateFeatures f (rec {
+    cfg_if."${deps.prometheus."0.7.0".cfg_if}".default = true;
+    fnv."${deps.prometheus."0.7.0".fnv}".default = true;
+    lazy_static."${deps.prometheus."0.7.0".lazy_static}".default = true;
     prometheus = fold recursiveUpdate {} [
-      { "0.3.13"."clippy" =
-        (f.prometheus."0.3.13"."clippy" or false) ||
-        (f.prometheus."0.3.13".dev or false) ||
-        (prometheus."0.3.13"."dev" or false); }
-      { "0.3.13"."hyper" =
-        (f.prometheus."0.3.13"."hyper" or false) ||
-        (f.prometheus."0.3.13".push or false) ||
-        (prometheus."0.3.13"."push" or false); }
-      { "0.3.13"."libc" =
-        (f.prometheus."0.3.13"."libc" or false) ||
-        (f.prometheus."0.3.13".nightly or false) ||
-        (prometheus."0.3.13"."nightly" or false) ||
-        (f.prometheus."0.3.13".process or false) ||
-        (prometheus."0.3.13"."process" or false) ||
-        (f.prometheus."0.3.13".push or false) ||
-        (prometheus."0.3.13"."push" or false); }
-      { "0.3.13"."procinfo" =
-        (f.prometheus."0.3.13"."procinfo" or false) ||
-        (f.prometheus."0.3.13".process or false) ||
-        (prometheus."0.3.13"."process" or false); }
-      { "0.3.13".default = (f.prometheus."0.3.13".default or true); }
+      { "0.7.0"."libc" =
+        (f.prometheus."0.7.0"."libc" or false) ||
+        (f.prometheus."0.7.0".nightly or false) ||
+        (prometheus."0.7.0"."nightly" or false) ||
+        (f.prometheus."0.7.0".process or false) ||
+        (prometheus."0.7.0"."process" or false) ||
+        (f.prometheus."0.7.0".push or false) ||
+        (prometheus."0.7.0"."push" or false); }
+      { "0.7.0"."procinfo" =
+        (f.prometheus."0.7.0"."procinfo" or false) ||
+        (f.prometheus."0.7.0".process or false) ||
+        (prometheus."0.7.0"."process" or false); }
+      { "0.7.0"."protobuf" =
+        (f.prometheus."0.7.0"."protobuf" or false) ||
+        (f.prometheus."0.7.0".default or false) ||
+        (prometheus."0.7.0"."default" or false); }
+      { "0.7.0"."protobuf-codegen-pure" =
+        (f.prometheus."0.7.0"."protobuf-codegen-pure" or false) ||
+        (f.prometheus."0.7.0".gen or false) ||
+        (prometheus."0.7.0"."gen" or false); }
+      { "0.7.0"."reqwest" =
+        (f.prometheus."0.7.0"."reqwest" or false) ||
+        (f.prometheus."0.7.0".push or false) ||
+        (prometheus."0.7.0"."push" or false); }
+      { "0.7.0".default = (f.prometheus."0.7.0".default or true); }
     ];
-    protobuf."${deps.prometheus."0.3.13".protobuf}".default = true;
-    quick_error."${deps.prometheus."0.3.13".quick_error}".default = true;
-    spin = fold recursiveUpdate {} [
-      { "${deps.prometheus."0.3.13".spin}"."unstable" =
-        (f.spin."${deps.prometheus."0.3.13".spin}"."unstable" or false) ||
-        (prometheus."0.3.13"."nightly" or false) ||
-        (f."prometheus"."0.3.13"."nightly" or false); }
-      { "${deps.prometheus."0.3.13".spin}".default = (f.spin."${deps.prometheus."0.3.13".spin}".default or false); }
-    ];
+    protobuf."${deps.prometheus."0.7.0".protobuf}".default = true;
+    quick_error."${deps.prometheus."0.7.0".quick_error}".default = true;
+    spin."${deps.prometheus."0.7.0".spin}".default = true;
   }) [
-    (features_.cfg_if."${deps."prometheus"."0.3.13"."cfg_if"}" deps)
-    (features_.fnv."${deps."prometheus"."0.3.13"."fnv"}" deps)
-    (features_.lazy_static."${deps."prometheus"."0.3.13"."lazy_static"}" deps)
-    (features_.protobuf."${deps."prometheus"."0.3.13"."protobuf"}" deps)
-    (features_.quick_error."${deps."prometheus"."0.3.13"."quick_error"}" deps)
-    (features_.spin."${deps."prometheus"."0.3.13"."spin"}" deps)
+    (features_.cfg_if."${deps."prometheus"."0.7.0"."cfg_if"}" deps)
+    (features_.fnv."${deps."prometheus"."0.7.0"."fnv"}" deps)
+    (features_.lazy_static."${deps."prometheus"."0.7.0"."lazy_static"}" deps)
+    (features_.protobuf."${deps."prometheus"."0.7.0"."protobuf"}" deps)
+    (features_.quick_error."${deps."prometheus"."0.7.0"."quick_error"}" deps)
+    (features_.spin."${deps."prometheus"."0.7.0"."spin"}" deps)
   ];
 
 
 # end
-# protobuf-1.7.5
+# protobuf-2.7.0
 
-  crates.protobuf."1.7.5" = deps: { features?(features_.protobuf."1.7.5" deps {}) }: buildRustCrate {
+  crates.protobuf."2.7.0" = deps: { features?(features_.protobuf."2.7.0" deps {}) }: buildRustCrate {
     crateName = "protobuf";
-    version = "1.7.5";
+    version = "2.7.0";
     description = "Rust implementation of Google protocol buffers\n";
     authors = [ "Stepan Koltsov <stepan.koltsov@gmail.com>" ];
-    sha256 = "1mbm9j0yp68wc8q2ky9j9k0f43g060ivv52114plvfwza5vfqi3p";
-    crateBin =
-      [{  name = "protoc-gen-rust";  path = "protoc-gen-rust.rs"; }] ++
-      [{  name = "protobuf-bin-gen-rust-do-not-use";  path = "protobuf-bin-gen-rust-do-not-use.rs"; }];
+    sha256 = "0kzw1gmz7537q8nrfzbvhx491w0hhhj2wbbyg365rmx4v98ni9db";
     dependencies = mapFeatures features ([
 ]);
-    features = mkFeatures (features."protobuf"."1.7.5" or {});
+    features = mkFeatures (features."protobuf"."2.7.0" or {});
   };
-  features_.protobuf."1.7.5" = deps: f: updateFeatures f (rec {
+  features_.protobuf."2.7.0" = deps: f: updateFeatures f (rec {
     protobuf = fold recursiveUpdate {} [
-      { "1.7.5"."bytes" =
-        (f.protobuf."1.7.5"."bytes" or false) ||
-        (f.protobuf."1.7.5".with-bytes or false) ||
-        (protobuf."1.7.5"."with-bytes" or false); }
-      { "1.7.5".default = (f.protobuf."1.7.5".default or true); }
+      { "2.7.0"."bytes" =
+        (f.protobuf."2.7.0"."bytes" or false) ||
+        (f.protobuf."2.7.0".with-bytes or false) ||
+        (protobuf."2.7.0"."with-bytes" or false); }
+      { "2.7.0"."serde" =
+        (f.protobuf."2.7.0"."serde" or false) ||
+        (f.protobuf."2.7.0".with-serde or false) ||
+        (protobuf."2.7.0"."with-serde" or false); }
+      { "2.7.0"."serde_derive" =
+        (f.protobuf."2.7.0"."serde_derive" or false) ||
+        (f.protobuf."2.7.0".with-serde or false) ||
+        (protobuf."2.7.0"."with-serde" or false); }
+      { "2.7.0".default = (f.protobuf."2.7.0".default or true); }
     ];
   }) [];
 
 
 # end
-# quick-error-0.2.2
+# quick-error-1.2.2
 
-  crates.quick_error."0.2.2" = deps: { features?(features_.quick_error."0.2.2" deps {}) }: buildRustCrate {
+  crates.quick_error."1.2.2" = deps: { features?(features_.quick_error."1.2.2" deps {}) }: buildRustCrate {
     crateName = "quick-error";
-    version = "0.2.2";
+    version = "1.2.2";
     description = "    A macro which makes error types pleasant to write.\n";
     authors = [ "Paul Colomiets <paul@colomiets.name>" "Colin Kiegel <kiegel@gmx.de>" ];
-    sha256 = "0r1f4ps998y779qwvnmmxhjq00qh5wxg3m5inswfawg0vr2732db";
+    sha256 = "192a3adc5phgpibgqblsdx1b421l5yg9bjbmv552qqq9f37h60k5";
   };
-  features_.quick_error."0.2.2" = deps: f: updateFeatures f (rec {
-    quick_error."0.2.2".default = (f.quick_error."0.2.2".default or true);
+  features_.quick_error."1.2.2" = deps: f: updateFeatures f (rec {
+    quick_error."1.2.2".default = (f.quick_error."1.2.2".default or true);
   }) [];
 
 
@@ -2396,17 +2395,30 @@ rec {
 
 
 # end
-# rustc-demangle-0.1.5
+# rustc-demangle-0.1.15
 
-  crates.rustc_demangle."0.1.5" = deps: { features?(features_.rustc_demangle."0.1.5" deps {}) }: buildRustCrate {
+  crates.rustc_demangle."0.1.15" = deps: { features?(features_.rustc_demangle."0.1.15" deps {}) }: buildRustCrate {
     crateName = "rustc-demangle";
-    version = "0.1.5";
+    version = "0.1.15";
     description = "Rust compiler symbol demangling.\n";
     authors = [ "Alex Crichton <alex@alexcrichton.com>" ];
-    sha256 = "096kkcx9j747700fhxj1s4rlwkj21pqjmvj64psdj6bakb2q13nc";
+    sha256 = "04rgsfzhz4k9s56vkczsdbvmvg9409xp0nw4cy99lb2i0aa0255s";
+    dependencies = mapFeatures features ([
+]);
+    features = mkFeatures (features."rustc_demangle"."0.1.15" or {});
   };
-  features_.rustc_demangle."0.1.5" = deps: f: updateFeatures f (rec {
-    rustc_demangle."0.1.5".default = (f.rustc_demangle."0.1.5".default or true);
+  features_.rustc_demangle."0.1.15" = deps: f: updateFeatures f (rec {
+    rustc_demangle = fold recursiveUpdate {} [
+      { "0.1.15"."compiler_builtins" =
+        (f.rustc_demangle."0.1.15"."compiler_builtins" or false) ||
+        (f.rustc_demangle."0.1.15".rustc-dep-of-std or false) ||
+        (rustc_demangle."0.1.15"."rustc-dep-of-std" or false); }
+      { "0.1.15"."core" =
+        (f.rustc_demangle."0.1.15"."core" or false) ||
+        (f.rustc_demangle."0.1.15".rustc-dep-of-std or false) ||
+        (rustc_demangle."0.1.15"."rustc-dep-of-std" or false); }
+      { "0.1.15".default = (f.rustc_demangle."0.1.15".default or true); }
+    ];
   }) [];
 
 
@@ -2537,32 +2549,17 @@ rec {
 
 
 # end
-# spin-0.4.10
+# spin-0.5.0
 
-  crates.spin."0.4.10" = deps: { features?(features_.spin."0.4.10" deps {}) }: buildRustCrate {
+  crates.spin."0.5.0" = deps: { features?(features_.spin."0.5.0" deps {}) }: buildRustCrate {
     crateName = "spin";
-    version = "0.4.10";
-    description = "Synchronization primitives based on spinning.\nThey may contain data,\nThey are usable without `std`\nand static initializers are available.\n";
-    authors = [ "Mathijs van de Nes <git@mathijs.vd-nes.nl>" "John Ericson <John_Ericson@Yahoo.com>" ];
-    sha256 = "0gaxd3pialj8pq6b2xm4sqhgmxmhblz9ki2bmjjrfmzr3qhpa1l5";
-    features = mkFeatures (features."spin"."0.4.10" or {});
+    version = "0.5.0";
+    description = "Synchronization primitives based on spinning.\nThey may contain data, are usable without `std`,\nand static initializers are available.\n";
+    authors = [ "Mathijs van de Nes <git@mathijs.vd-nes.nl>" "John Ericson <git@JohnEricson.me>" ];
+    sha256 = "1yln8vy2z7nkwn7s7fdzmqrwk77cwmfgcp89kzxm2ljdrf5vccar";
   };
-  features_.spin."0.4.10" = deps: f: updateFeatures f (rec {
-    spin = fold recursiveUpdate {} [
-      { "0.4.10"."const_fn" =
-        (f.spin."0.4.10"."const_fn" or false) ||
-        (f.spin."0.4.10".unstable or false) ||
-        (spin."0.4.10"."unstable" or false); }
-      { "0.4.10"."once" =
-        (f.spin."0.4.10"."once" or false) ||
-        (f.spin."0.4.10".unstable or false) ||
-        (spin."0.4.10"."unstable" or false); }
-      { "0.4.10"."unstable" =
-        (f.spin."0.4.10"."unstable" or false) ||
-        (f.spin."0.4.10".default or false) ||
-        (spin."0.4.10"."default" or false); }
-      { "0.4.10".default = (f.spin."0.4.10".default or true); }
-    ];
+  features_.spin."0.5.0" = deps: f: updateFeatures f (rec {
+    spin."0.5.0".default = (f.spin."0.5.0".default or true);
   }) [];
 
 

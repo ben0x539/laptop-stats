@@ -51,16 +51,16 @@ rec {
     winapi = "0.3.3";
   };
   deps.autocfg."0.1.4" = {};
-  deps.backtrace."0.3.5" = {
+  deps.backtrace."0.3.12" = {
     cfg_if = "0.1.2";
-    rustc_demangle = "0.1.5";
-    backtrace_sys = "0.1.16";
+    rustc_demangle = "0.1.15";
+    backtrace_sys = "0.1.30";
     libc = "0.2.59";
     winapi = "0.3.3";
   };
-  deps.backtrace_sys."0.1.16" = {
+  deps.backtrace_sys."0.1.30" = {
     libc = "0.2.59";
-    cc = "1.0.3";
+    cc = "1.0.37";
   };
   deps.bitflags."1.0.1" = {};
   deps.byteorder."1.2.1" = {};
@@ -69,7 +69,7 @@ rec {
     either = "1.5.2";
     iovec = "0.1.1";
   };
-  deps.cc."1.0.3" = {};
+  deps.cc."1.0.37" = {};
   deps.cfg_if."0.1.2" = {};
   deps.clap."2.30.0" = {
     atty = "0.2.10";
@@ -104,7 +104,7 @@ rec {
   };
   deps.either."1.5.2" = {};
   deps.failure."0.1.5" = {
-    backtrace = "0.3.5";
+    backtrace = "0.3.12";
     failure_derive = "0.1.5";
   };
   deps.failure_derive."0.1.5" = {
@@ -189,10 +189,9 @@ rec {
   deps.laptop_stats."0.1.0" = {
     failure = "0.1.5";
     hyper = "0.12.32";
-    prometheus = "0.3.13";
+    prometheus = "0.7.0";
     structopt = "0.2.18";
   };
-  deps.lazy_static."0.2.11" = {};
   deps.lazy_static."1.3.0" = {};
   deps.libc."0.2.59" = {};
   deps.lock_api."0.1.5" = {
@@ -247,16 +246,16 @@ rec {
   deps.proc_macro2."0.4.30" = {
     unicode_xid = "0.1.0";
   };
-  deps.prometheus."0.3.13" = {
+  deps.prometheus."0.7.0" = {
     cfg_if = "0.1.2";
     fnv = "1.0.6";
-    lazy_static = "0.2.11";
-    protobuf = "1.7.5";
-    quick_error = "0.2.2";
-    spin = "0.4.10";
+    lazy_static = "1.3.0";
+    protobuf = "2.7.0";
+    quick_error = "1.2.2";
+    spin = "0.5.0";
   };
-  deps.protobuf."1.7.5" = {};
-  deps.quick_error."0.2.2" = {};
+  deps.protobuf."2.7.0" = {};
+  deps.quick_error."1.2.2" = {};
   deps.quote."0.6.3" = {
     proc_macro2 = "0.4.30";
   };
@@ -314,7 +313,7 @@ rec {
   deps.redox_termios."0.1.1" = {
     redox_syscall = "0.1.34";
   };
-  deps.rustc_demangle."0.1.5" = {};
+  deps.rustc_demangle."0.1.15" = {};
   deps.rustc_version."0.2.3" = {
     semver = "0.9.0";
   };
@@ -325,7 +324,7 @@ rec {
   deps.semver_parser."0.7.0" = {};
   deps.slab."0.4.2" = {};
   deps.smallvec."0.6.10" = {};
-  deps.spin."0.4.10" = {};
+  deps.spin."0.5.0" = {};
   deps.stable_deref_trait."1.1.1" = {};
   deps.string."0.2.1" = {
     bytes = "0.4.12";
