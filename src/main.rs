@@ -32,7 +32,7 @@ fn main() {
 }
 
 struct Metrics {
-    updates: Vec<Box<Update>>,
+    updates: Vec<Box<dyn Update>>,
     cpu_hz: GaugeVec,
     cpu_min_hz: GaugeVec,
     cpu_max_hz: GaugeVec,
@@ -161,8 +161,9 @@ fn from_file<P: Into<path::PathBuf>>(gauge: Gauge, p: P)
     }
 }
 
-fn add_backlight<P: AsRef<path::Path>>(updates: &mut Vec<Box<Update>>, path: P)
-        -> Result<(), Error> {
+fn add_backlight<P>(updates: &mut Vec<Box<dyn Update>>, path: P)
+        -> Result<(), Error>
+        where P: AsRef<path::Path> {
     let path = path.as_ref();
     if !fs::metadata(path)?.file_type().is_dir() {
         return Ok(());
@@ -186,7 +187,7 @@ fn add_backlight<P: AsRef<path::Path>>(updates: &mut Vec<Box<Update>>, path: P)
 
 impl Metrics {
     fn new() -> Result<Metrics, Error> {
-        let mut updates: Vec<Box<Update>> = Vec::new();
+        let mut updates: Vec<Box<dyn Update>> = Vec::new();
 
         for entry in fs::read_dir("/sys/class/backlight")? {
             let entry = entry?;
