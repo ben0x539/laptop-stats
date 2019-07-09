@@ -152,49 +152,63 @@ impl<F: FnMut(String) -> Result<f64, Error>+Send> Update for FileGauge<F> {
     }
 }
 
-fn from_file<P: Into<path::PathBuf>>(gauge: Gauge, p: P)
-        -> FileGauge<impl FnMut(String) -> Result<f64, Error>> {
-    FileGauge {
-        gauge: gauge,
-        path: p.into(),
-        transform: |s| Ok(f64::from_str(s.trim())?),
+struct Backlight {
+    base_path: path::PathBuf,
+    gauge_brightness: Gauge,
+    gauge_brightness_max: Gauge,
+}
+
+impl Backlight {
+    fn new<P: Into<path::PathBuf>>(base_path: P) -> Result<Backlight, Error> {
+        Ok(Backlight {
+            base_path: base_path.into(),
+            gauge_brightness: Gauge::new(
+                "laptop_backlight_brightness",
+                "current backlight brightness")?,
+            gauge_brightness_max: Gauge::new(
+                "laptop_backlight_brightness_max",
+                "maximum backlight brightness")?,
+        })
     }
 }
 
-fn add_backlight<P>(updates: &mut Vec<Box<dyn Update>>, path: P)
-        -> Result<(), Error>
-        where P: AsRef<path::Path> {
-    let path = path.as_ref();
-    if !fs::metadata(path)?.file_type().is_dir() {
-        return Ok(());
+impl Update for Backlight {
+    fn update(&mut self) -> Result<(), Error> {
+        for entry in fs::read_dir(&self.base_path)? {
+            let entry = entry?;
+            // entry.metadata() doesn't work because it doesn't resolve
+            // symlinks, need fs::metadata to see if it's a symlink to a dir.
+            let path = entry.path();
+            if !fs::metadata(&path)?.file_type().is_dir() {
+                continue;
+            }
+
+
+            let brightness = read_num(&path.join("brightness"))?;
+            let brightness_max = read_num(&path.join("max_brightness"))?;
+
+            self.gauge_brightness.set(brightness);
+            self.gauge_brightness_max.set(brightness_max);
+
+            return Ok(());
+        }
+
+        bail!("couldn't read backlight info")
     }
 
-    // TODO: this is gonna break if a laptop has multiple backlights
-    //       but clearly that can never happen
-    updates.push(Box::new(from_file(
-        Gauge::new(
-            "laptop_backlight_brightness",
-            "current backlight brightness")?,
-        path.join("brightness"))));
-    updates.push(Box::new(from_file(
-        Gauge::new(
-            "laptop_backlight_brightness_max",
-            "maximum backlight brightness")?,
-        path.join("max_brightness"))));
-
-    Ok(())
+    fn register(&mut self, r: &Registry) -> Result<(), Error> {
+        r.register(Box::new(self.gauge_brightness.clone()))?;
+        r.register(Box::new(self.gauge_brightness_max.clone()))?;
+        Ok(())
+    }
 }
 
 impl Metrics {
     fn new() -> Result<Metrics, Error> {
         let mut updates: Vec<Box<dyn Update>> = Vec::new();
 
-        for entry in fs::read_dir("/sys/class/backlight")? {
-            let entry = entry?;
-            let path = entry.path();
-            add_backlight(&mut updates, &path).with_context(|_|
-                format!("couldn't check out {}", path.display()))?;
-        }
+        updates.push(Box::new(Backlight::new("/sys/class/backlight")
+            .with_context(|_| "couldn't create backlight")?));
 
         updates.push(Box::new(FileGauge {
             gauge: Gauge::new(
